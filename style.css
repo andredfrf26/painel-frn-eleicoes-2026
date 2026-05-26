@@ -232,22 +232,19 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border: 1px solid rgba(148, 163, 184, 0.28) !important;
 }
 
-.stButton button[kind="primary"] {
+.stButton button[kind="primary"],
+.stButton button[data-testid="stBaseButton-primary"],
+button[data-testid="stBaseButton-primary"] {
     background: #b99063 !important;
     border-color: #b99063 !important;
     color: #07111d !important;
 }
 
-div[data-testid="stImage"] + div .stButton button {
-    margin-top: 8px !important;
-    width: 72% !important;
-    min-width: 140px !important;
-    max-width: 190px !important;
-    height: 34px !important;
-    display: block !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    font-size: 12px !important;
+.stButton button[data-testid="stBaseButton-secondary"],
+button[data-testid="stBaseButton-secondary"] {
+    background: #122334 !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+    color: #ffffff !important;
 }
 
 .stDownloadButton button {

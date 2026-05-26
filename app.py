@@ -21,6 +21,7 @@ GOOGLE_SHEET_URL = ""
 PALETTE = ["#b99063", "#147f92", "#2eb39b", "#d6a642", "#0f5c70", "#8fb8c9"]
 CHART_BG = "#122334"
 PAGE_TEXT = "#d8e6f3"
+PLOTLY_CONFIG = {"displayModeBar": False, "responsive": True}
 
 
 if CSS_PATH.exists():
@@ -281,12 +282,8 @@ with header_right:
     logo_files = sorted((BASE_DIR / "assets").glob(LOGO_PATTERN))
     if logo_files:
         st.image(str(logo_files[0]), width="stretch")
-    if st.button("Atualizar", width="stretch", key="btn_atualizar_dados"):
-        st.cache_data.clear()
-        st.session_state["refresh_message"] = "Dados atualizados."
-        st.rerun()
 
-polo_ativo, polo_passivo, _ = st.columns([0.9, 0.9, 5.2])
+polo_ativo, polo_passivo, atualizar_col, _ = st.columns([0.9, 0.9, 0.9, 4.3])
 with polo_ativo:
     st.button(
         f"Polo Ativo    {ativo_total}",
@@ -305,6 +302,11 @@ with polo_passivo:
         args=("PASSIVO",),
         type="primary" if selected_polo == "PASSIVO" else "secondary",
     )
+with atualizar_col:
+    if st.button("Atualizar", width="stretch", key="btn_atualizar_dados"):
+        st.cache_data.clear()
+        st.session_state["refresh_message"] = "Dados atualizados."
+        st.rerun()
 if st.session_state["refresh_message"]:
     st.toast(st.session_state["refresh_message"])
     st.session_state["refresh_message"] = ""
@@ -463,12 +465,13 @@ with g1:
         textfont=dict(color="#ffffff", size=11),
         marker=dict(line=dict(color=CHART_BG, width=1)),
     )
-    st.plotly_chart(fig1, width="stretch")
+    st.plotly_chart(fig1, width="stretch", config=PLOTLY_CONFIG)
 
 with g2:
     st.plotly_chart(
         horizontal_bar(df_filtrado, COL_TEMA, "Tema", "Top 10 Temas", "#147f92"),
         width="stretch",
+        config=PLOTLY_CONFIG,
     )
 
 g3, g4 = st.columns(2)
@@ -477,12 +480,14 @@ with g3:
     st.plotly_chart(
         horizontal_bar(df_filtrado, COL_RELATORIA, "Relatoria", "Distribuição por Relatoria", "#b99063"),
         width="stretch",
+        config=PLOTLY_CONFIG,
     )
 
 with g4:
     st.plotly_chart(
         horizontal_bar(df_filtrado, COL_PARTE, "Parte Contrária", "Top 10 Partes Contrárias", "#2eb39b"),
         width="stretch",
+        config=PLOTLY_CONFIG,
     )
 
 st.plotly_chart(
@@ -495,6 +500,7 @@ st.plotly_chart(
         height=340,
     ),
     width="stretch",
+    config=PLOTLY_CONFIG,
 )
 
 st.subheader("Detalhamento dos Processos")
