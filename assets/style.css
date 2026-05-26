@@ -1,0 +1,237 @@
+header,
+footer,
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"] {
+    display: none !important;
+}
+
+html,
+body,
+.stApp {
+    background: #07111d !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.block-container {
+    max-width: 100% !important;
+    padding: 0.45rem 1.4rem 2rem !important;
+}
+
+div[data-testid="stVerticalBlock"] {
+    gap: 0.62rem !important;
+}
+
+h1 {
+    color: #ffffff !important;
+    font-size: 26px !important;
+    font-weight: 900 !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0 !important;
+    margin: 0.2rem 0 0.2rem !important;
+}
+
+h2,
+h3,
+.stSubheader {
+    color: #ffffff !important;
+}
+
+.subtitle {
+    color: #b6d5ec;
+    font-size: 13px;
+    margin: 0 0 0.8rem;
+}
+
+[data-testid="stImage"] {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 9px 14px;
+    min-height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+[data-testid="stImage"] img {
+    width: 100% !important;
+    max-height: 74px !important;
+    object-fit: contain !important;
+}
+
+.pill {
+    border-radius: 8px;
+    padding: 10px 14px;
+    min-height: 38px;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pill span {
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 10px;
+}
+
+.pill-gold {
+    background: #b99063;
+    color: #07111d;
+}
+
+.pill-gold span {
+    background: rgba(7, 17, 29, 0.14);
+}
+
+.pill-dark {
+    background: #122334;
+    color: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.26);
+}
+
+.pill-dark span {
+    background: #20384d;
+}
+
+.section-gap {
+    height: 0.3rem;
+}
+
+.kpi-card {
+    background: #122334;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 8px;
+    min-height: 96px;
+    padding: 14px 10px;
+    text-align: center;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kpi-title {
+    color: #b6d5ec;
+    font-size: 11px;
+    line-height: 1.25;
+    margin-bottom: 7px;
+}
+
+.kpi-value {
+    color: #ffffff;
+    font-size: 27px;
+    font-weight: 900;
+    line-height: 1.05;
+}
+
+.kpi-desc {
+    color: #ffffff;
+    font-size: 10px;
+    line-height: 1.25;
+    margin-top: 7px;
+}
+
+.stTextInput label,
+.stSelectbox label {
+    color: #b6d5ec !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
+
+.stTextInput input {
+    background: #0b1826 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(148, 163, 184, 0.28) !important;
+    border-radius: 7px !important;
+    min-height: 39px !important;
+}
+
+.stTextInput input::placeholder {
+    color: #7f8ea3 !important;
+}
+
+.stSelectbox div[data-baseweb="select"] > div {
+    background: #0b1826 !important;
+    color: #ffffff !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+    border-radius: 7px !important;
+    min-height: 39px !important;
+}
+
+.stSelectbox svg {
+    color: #b6d5ec !important;
+}
+
+.stButton button,
+.stDownloadButton button {
+    border-radius: 8px !important;
+    height: 39px !important;
+    margin-top: 24px !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+.stButton button {
+    background: #122d43 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(148, 163, 184, 0.28) !important;
+}
+
+div[data-testid="stImage"] + div .stButton button {
+    margin-top: 8px !important;
+    width: 72% !important;
+    min-width: 140px !important;
+    max-width: 190px !important;
+    height: 34px !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    font-size: 12px !important;
+}
+
+.stDownloadButton button {
+    background: #b99063 !important;
+    color: #07111d !important;
+    border: 1px solid #b99063 !important;
+}
+
+.stPlotlyChart {
+    background: #122334;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.stDataFrame {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+div[data-testid="stDataFrame"] {
+    border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #07111d;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #20384d;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2b4b66;
+}
