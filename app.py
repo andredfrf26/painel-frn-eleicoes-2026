@@ -168,6 +168,7 @@ def reset_filters():
         "tipo": "Todos",
         "tema": "Todos",
         "relatoria": "Todas",
+        "situacao": "Todas",
         "parte": "Todas",
     }
     for key, value in defaults.items():
@@ -177,6 +178,10 @@ def reset_filters():
 def ensure_session_choice(key, options, default):
     if st.session_state.get(key, default) not in options:
         st.session_state[key] = default
+
+
+def select_polo(polo):
+    st.query_params["polo"] = polo
 
 
 def kpi_card(title, value, description):
@@ -283,24 +288,22 @@ with header_right:
 
 polo_ativo, polo_passivo, _ = st.columns([0.9, 0.9, 5.2])
 with polo_ativo:
-    st.markdown(
-        f"""
-        <a class="polo-filter {'active' if selected_polo == 'ATIVO' else ''}" href="?polo=ATIVO">
-            <span>Polo Ativo</span>
-            <strong>{ativo_total}</strong>
-        </a>
-        """,
-        unsafe_allow_html=True,
+    st.button(
+        f"Polo Ativo    {ativo_total}",
+        width="stretch",
+        key="polo_ativo_btn",
+        on_click=select_polo,
+        args=("ATIVO",),
+        type="primary" if selected_polo == "ATIVO" else "secondary",
     )
 with polo_passivo:
-    st.markdown(
-        f"""
-        <a class="polo-filter {'active' if selected_polo == 'PASSIVO' else ''}" href="?polo=PASSIVO">
-            <span>Polo Passivo</span>
-            <strong>{passivo_total}</strong>
-        </a>
-        """,
-        unsafe_allow_html=True,
+    st.button(
+        f"Polo Passivo    {passivo_total}",
+        width="stretch",
+        key="polo_passivo_btn",
+        on_click=select_polo,
+        args=("PASSIVO",),
+        type="primary" if selected_polo == "PASSIVO" else "secondary",
     )
 if st.session_state["refresh_message"]:
     st.toast(st.session_state["refresh_message"])
@@ -309,29 +312,23 @@ if st.session_state["refresh_message"]:
 tipo_options = unique_options(df_base, COL_TIPO, "Todos")
 tema_options = unique_options(df_base, COL_TEMA, "Todos")
 relatoria_options = unique_options(df_base, COL_RELATORIA, "Todas")
+situacao_options = unique_options(df_base, SITUACAO_FIELD, "Todas")
 parte_options = unique_options(df_base, COL_PARTE, "Todas")
 
 ensure_session_choice("tipo", tipo_options, "Todos")
 ensure_session_choice("tema", tema_options, "Todos")
 ensure_session_choice("relatoria", relatoria_options, "Todas")
+ensure_session_choice("situacao", situacao_options, "Todas")
 ensure_session_choice("parte", parte_options, "Todas")
 
-f1, f2, f3, f4, f5 = st.columns([2.2, 1.2, 1.25, 1.25, 1.25])
-
-busca = f1.text_input(
-    "Busca livre",
-    placeholder="Processo, tema, objeto, relatoria ou parte contrária",
-    key="busca",
-)
-numero = f2.text_input("Número do processo", placeholder="0600...", key="numero")
-tipo = f3.selectbox("Tipo da Ação", tipo_options, key="tipo")
-tema = f4.selectbox("Tema", tema_options, key="tema")
-relatoria = f5.selectbox("Relatoria", relatoria_options, key="relatoria")
-
-f6, f7, f8, f9 = st.columns([2.2, 1.25, 1.05, 1.05])
-
-objeto = f6.text_input("Objeto contém", placeholder="Instagram, impulsionamento, IA...", key="objeto")
-parte = f7.selectbox("Parte Contrária", parte_options, key="parte")
+busca = st.session_state.get("busca", "")
+numero = st.session_state.get("numero", "")
+tipo = st.session_state.get("tipo", "Todos")
+tema = st.session_state.get("tema", "Todos")
+relatoria = st.session_state.get("relatoria", "Todas")
+objeto = st.session_state.get("objeto", "")
+situacao = st.session_state.get("situacao", "Todas")
+parte = st.session_state.get("parte", "Todas")
 
 df_filtrado = df_base.copy()
 
@@ -359,42 +356,70 @@ if relatoria != "Todas":
 if objeto:
     df_filtrado = df_filtrado[contains(df_filtrado[COL_OBJETO], objeto.strip())]
 
+if situacao != "Todas":
+    df_filtrado = df_filtrado[df_filtrado[SITUACAO_FIELD].astype(str) == situacao]
+
 if parte != "Todas":
     df_filtrado = df_filtrado[df_filtrado[COL_PARTE].astype(str) == parte]
 
-with f8:
-    st.button(
-        "Limpar campos",
-        width="stretch",
-        on_click=reset_filters,
-        key="btn_limpar_campos",
-    )
-
-with f9:
-    st.download_button(
-        "Exportar CSV",
-        df_filtrado.to_csv(index=False).encode("utf-8-sig"),
-        "processos_filtrados.csv",
-        "text/csv",
-        width="stretch",
-        key="btn_exportar_csv",
-    )
-
-st.markdown("<div class='section-gap'></div>", unsafe_allow_html=True)
+percent_base = 0 if len(df_base) == 0 else (len(df_filtrado) / len(df_base)) * 100
 
 k1, k2, k3, k4, k5, k6 = st.columns(6)
 with k1:
-    kpi_card("Registros exibidos", len(df_filtrado), f"base filtrada por TSE / Polo {polo_label}")
+    kpi_card(
+        f"Registros TSE / {polo_label} exibidos",
+        len(df_filtrado),
+        f"{percent_base:.1f}% da base TSE / {polo_label}",
+    )
 with k2:
     kpi_card("Tipos da ação", df_filtrado[COL_TIPO].nunique(), "classes distintas")
 with k3:
     kpi_card("Temas", df_filtrado[COL_TEMA].nunique(), "temas distintos")
 with k4:
-    kpi_card("Relatorias", df_filtrado[COL_RELATORIA].nunique(), "relatorias distintas")
+    kpi_card("Situação processual", df_filtrado[SITUACAO_FIELD].nunique(), "situações distintas")
 with k5:
     kpi_card("Partes contrárias", df_filtrado[COL_PARTE].nunique(), "menções distintas")
 with k6:
     kpi_card("Filtro fixo", len(df_base), f"{fora_filtro} registro(s) fora de TSE / {polo_label}")
+
+st.markdown("<div class='section-gap'></div>", unsafe_allow_html=True)
+
+with st.container(border=True):
+    f1, f2, f3, f4, f5 = st.columns([2.2, 1.1, 1.1, 1.1, 1.1])
+
+    f1.text_input(
+        "Busca livre",
+        placeholder="Processo, tema, objeto, situação, relatoria ou parte contrária",
+        key="busca",
+    )
+    f2.text_input("Número do processo", placeholder="0600...", key="numero")
+    f3.selectbox("Tipo da Ação", tipo_options, key="tipo")
+    f4.selectbox("Tema", tema_options, key="tema")
+    f5.selectbox("Relatoria", relatoria_options, key="relatoria")
+
+    f6, f7, f8, f9, f10 = st.columns([2.2, 1.1, 1.1, 1.1, 1.1])
+
+    f6.text_input("Objeto contém", placeholder="Instagram, impulsionamento, IA...", key="objeto")
+    f7.selectbox("Situação processual", situacao_options, key="situacao")
+    f8.selectbox("Parte Contrária", parte_options, key="parte")
+
+    with f9:
+        st.button(
+            "Limpar filtros",
+            width="stretch",
+            on_click=reset_filters,
+            key="btn_limpar_campos",
+        )
+
+    with f10:
+        st.download_button(
+            "Exportar CSV",
+            df_filtrado.to_csv(index=False).encode("utf-8-sig"),
+            "processos_filtrados.csv",
+            "text/csv",
+            width="stretch",
+            key="btn_exportar_csv",
+        )
 
 st.markdown("<div class='section-gap'></div>", unsafe_allow_html=True)
 

@@ -140,7 +140,7 @@ h3,
 }
 
 .section-gap {
-    height: 0.3rem;
+    height: 0.65rem;
 }
 
 .kpi-card {
@@ -149,7 +149,7 @@ h3,
     border-radius: 8px;
     min-height: 96px;
     padding: 14px 10px;
-    text-align: center;
+    text-align: left;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
     display: flex;
     flex-direction: column;
@@ -208,6 +208,13 @@ h3,
     color: #b6d5ec !important;
 }
 
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: #0d1b28 !important;
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+    border-radius: 8px !important;
+    padding: 16px 18px 12px !important;
+}
+
 .stButton button,
 .stDownloadButton button {
     border-radius: 8px !important;
@@ -223,6 +230,12 @@ h3,
     background: #122d43 !important;
     color: #ffffff !important;
     border: 1px solid rgba(148, 163, 184, 0.28) !important;
+}
+
+.stButton button[kind="primary"] {
+    background: #b99063 !important;
+    border-color: #b99063 !important;
+    color: #07111d !important;
 }
 
 div[data-testid="stImage"] + div .stButton button {
