@@ -174,6 +174,11 @@ def reset_filters():
         st.session_state[key] = value
 
 
+def ensure_session_choice(key, options, default):
+    if st.session_state.get(key, default) not in options:
+        st.session_state[key] = default
+
+
 def kpi_card(title, value, description):
     st.markdown(
         f"""
@@ -247,14 +252,16 @@ def horizontal_bar(frame, column, label, title, color, limit=10, height=310):
     return chart_layout(fig, title, height=height)
 
 
-df_base = df[
-    contains(df[COL_TRIBUNAL], "TSE")
-    & contains(df[COL_POLO], "ATIVO")
-].copy()
+query_polo = str(st.query_params.get("polo", "ATIVO")).upper()
+selected_polo = query_polo if query_polo in ["ATIVO", "PASSIVO"] else "ATIVO"
+
+df_tse = df[contains(df[COL_TRIBUNAL], "TSE")].copy()
+df_base = df_tse[contains(df_tse[COL_POLO], selected_polo)].copy()
 
 fora_filtro = len(df) - len(df_base)
-ativo_total = contains(df[COL_POLO], "ATIVO").sum()
-passivo_total = contains(df[COL_POLO], "PASSIVO").sum()
+ativo_total = contains(df_tse[COL_POLO], "ATIVO").sum()
+passivo_total = contains(df_tse[COL_POLO], "PASSIVO").sum()
+polo_label = "Ativo" if selected_polo == "ATIVO" else "Passivo"
 
 header_left, header_right = st.columns([4.6, 1.2])
 
@@ -277,17 +284,37 @@ with header_right:
 polo_ativo, polo_passivo, _ = st.columns([0.9, 0.9, 5.2])
 with polo_ativo:
     st.markdown(
-        f"<div class='pill pill-gold'>Polo Ativo <span>{ativo_total}</span></div>",
+        f"""
+        <a class="polo-filter {'active' if selected_polo == 'ATIVO' else ''}" href="?polo=ATIVO">
+            <span>Polo Ativo</span>
+            <strong>{ativo_total}</strong>
+        </a>
+        """,
         unsafe_allow_html=True,
     )
 with polo_passivo:
     st.markdown(
-        f"<div class='pill pill-dark'>Polo Passivo <span>{passivo_total}</span></div>",
+        f"""
+        <a class="polo-filter {'active' if selected_polo == 'PASSIVO' else ''}" href="?polo=PASSIVO">
+            <span>Polo Passivo</span>
+            <strong>{passivo_total}</strong>
+        </a>
+        """,
         unsafe_allow_html=True,
     )
 if st.session_state["refresh_message"]:
     st.toast(st.session_state["refresh_message"])
     st.session_state["refresh_message"] = ""
+
+tipo_options = unique_options(df_base, COL_TIPO, "Todos")
+tema_options = unique_options(df_base, COL_TEMA, "Todos")
+relatoria_options = unique_options(df_base, COL_RELATORIA, "Todas")
+parte_options = unique_options(df_base, COL_PARTE, "Todas")
+
+ensure_session_choice("tipo", tipo_options, "Todos")
+ensure_session_choice("tema", tema_options, "Todos")
+ensure_session_choice("relatoria", relatoria_options, "Todas")
+ensure_session_choice("parte", parte_options, "Todas")
 
 f1, f2, f3, f4, f5 = st.columns([2.2, 1.2, 1.25, 1.25, 1.25])
 
@@ -297,14 +324,14 @@ busca = f1.text_input(
     key="busca",
 )
 numero = f2.text_input("Número do processo", placeholder="0600...", key="numero")
-tipo = f3.selectbox("Tipo da Ação", unique_options(df_base, COL_TIPO, "Todos"), key="tipo")
-tema = f4.selectbox("Tema", unique_options(df_base, COL_TEMA, "Todos"), key="tema")
-relatoria = f5.selectbox("Relatoria", unique_options(df_base, COL_RELATORIA, "Todas"), key="relatoria")
+tipo = f3.selectbox("Tipo da Ação", tipo_options, key="tipo")
+tema = f4.selectbox("Tema", tema_options, key="tema")
+relatoria = f5.selectbox("Relatoria", relatoria_options, key="relatoria")
 
 f6, f7, f8, f9 = st.columns([2.2, 1.25, 1.05, 1.05])
 
 objeto = f6.text_input("Objeto contém", placeholder="Instagram, impulsionamento, IA...", key="objeto")
-parte = f7.selectbox("Parte Contrária", unique_options(df_base, COL_PARTE, "Todas"), key="parte")
+parte = f7.selectbox("Parte Contrária", parte_options, key="parte")
 
 df_filtrado = df_base.copy()
 
@@ -357,7 +384,7 @@ st.markdown("<div class='section-gap'></div>", unsafe_allow_html=True)
 
 k1, k2, k3, k4, k5, k6 = st.columns(6)
 with k1:
-    kpi_card("Registros exibidos", len(df_filtrado), "base filtrada por TSE / Polo Ativo")
+    kpi_card("Registros exibidos", len(df_filtrado), f"base filtrada por TSE / Polo {polo_label}")
 with k2:
     kpi_card("Tipos da ação", df_filtrado[COL_TIPO].nunique(), "classes distintas")
 with k3:
@@ -367,7 +394,7 @@ with k4:
 with k5:
     kpi_card("Partes contrárias", df_filtrado[COL_PARTE].nunique(), "menções distintas")
 with k6:
-    kpi_card("Filtro fixo", len(df_base), f"{fora_filtro} registro(s) fora de TSE / Ativo")
+    kpi_card("Filtro fixo", len(df_base), f"{fora_filtro} registro(s) fora de TSE / {polo_label}")
 
 st.markdown("<div class='section-gap'></div>", unsafe_allow_html=True)
 
