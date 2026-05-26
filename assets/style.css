@@ -98,6 +98,47 @@ h3,
     background: #20384d;
 }
 
+.polo-filter {
+    background: #122334;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 8px;
+    color: #ffffff !important;
+    min-height: 38px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+}
+
+.polo-filter:hover {
+    border-color: rgba(214, 166, 66, 0.55);
+    background: #163149;
+}
+
+.polo-filter strong {
+    background: #20384d;
+    border-radius: 999px;
+    color: #ffffff;
+    font-size: 10px;
+    line-height: 1;
+    padding: 4px 8px;
+}
+
+.polo-filter.active {
+    background: #b99063;
+    border-color: #b99063;
+    color: #07111d !important;
+}
+
+.polo-filter.active strong {
+    background: rgba(7, 17, 29, 0.14);
+    color: #07111d;
+}
+
 .section-gap {
     height: 0.3rem;
 }
