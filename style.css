@@ -11,6 +11,7 @@ body,
 .stApp {
     background: #07111d !important;
     color: #ffffff !important;
+    font-size: 16px !important;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -26,7 +27,7 @@ div[data-testid="stVerticalBlock"] {
 
 h1 {
     color: #ffffff !important;
-    font-size: 26px !important;
+    font-size: 30px !important;
     font-weight: 900 !important;
     line-height: 1.12 !important;
     letter-spacing: 0 !important;
@@ -41,7 +42,7 @@ h3,
 
 .subtitle {
     color: #b6d5ec;
-    font-size: 13px;
+    font-size: 15px;
     margin: 0 0 0.8rem;
 }
 
@@ -147,8 +148,8 @@ h3,
     background: #122334;
     border: 1px solid rgba(148, 163, 184, 0.28);
     border-radius: 8px;
-    min-height: 96px;
-    padding: 14px 10px;
+    min-height: 110px;
+    padding: 16px 14px;
     text-align: left;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
     display: flex;
@@ -158,21 +159,21 @@ h3,
 
 .kpi-title {
     color: #b6d5ec;
-    font-size: 11px;
+    font-size: 14px;
     line-height: 1.25;
     margin-bottom: 7px;
 }
 
 .kpi-value {
     color: #ffffff;
-    font-size: 27px;
+    font-size: 34px;
     font-weight: 900;
     line-height: 1.05;
 }
 
 .kpi-desc {
     color: #ffffff;
-    font-size: 10px;
+    font-size: 14px;
     line-height: 1.25;
     margin-top: 7px;
 }
@@ -180,7 +181,7 @@ h3,
 .stTextInput label,
 .stSelectbox label {
     color: #b6d5ec !important;
-    font-size: 11px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
 }
 
@@ -189,7 +190,8 @@ h3,
     color: #ffffff !important;
     border: 1px solid rgba(148, 163, 184, 0.28) !important;
     border-radius: 7px !important;
-    min-height: 39px !important;
+    min-height: 46px !important;
+    font-size: 16px !important;
 }
 
 .stTextInput input::placeholder {
@@ -201,7 +203,13 @@ h3,
     color: #ffffff !important;
     border-color: rgba(148, 163, 184, 0.28) !important;
     border-radius: 7px !important;
-    min-height: 39px !important;
+    min-height: 46px !important;
+    font-size: 16px !important;
+}
+
+.stSelectbox div[data-baseweb="select"] span,
+.stSelectbox div[data-baseweb="select"] div {
+    font-size: 16px !important;
 }
 
 .stSelectbox svg {
@@ -218,10 +226,10 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 .stButton button,
 .stDownloadButton button {
     border-radius: 8px !important;
-    height: 39px !important;
+    height: 46px !important;
     margin-top: 24px !important;
     font-weight: 800 !important;
-    font-size: 13px !important;
+    font-size: 16px !important;
     line-height: 1 !important;
     white-space: nowrap !important;
 }
@@ -233,6 +241,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 .stButton button[kind="primary"],
+.stButton button[aria-pressed="true"],
+.stButton button:focus:not(:active),
 .stButton button[data-testid="stBaseButton-primary"],
 button[data-testid="stBaseButton-primary"] {
     background: #b99063 !important;
@@ -247,6 +257,22 @@ button[data-testid="stBaseButton-secondary"] {
     color: #ffffff !important;
 }
 
+button[data-testid="stBaseButton-primary"] p,
+button[data-testid="stBaseButton-primary"] span,
+.stButton button[kind="primary"] p,
+.stButton button[kind="primary"] span {
+    color: #07111d !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+}
+
+button[data-testid="stBaseButton-secondary"] p,
+button[data-testid="stBaseButton-secondary"] span {
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+}
+
 .stDownloadButton button {
     background: #b99063 !important;
     color: #07111d !important;
@@ -258,6 +284,10 @@ button[data-testid="stBaseButton-secondary"] {
     border: 1px solid rgba(148, 163, 184, 0.28);
     border-radius: 8px;
     padding: 8px;
+}
+
+.stDataFrame {
+    font-size: 15px !important;
 }
 
 .stDataFrame {

@@ -182,6 +182,7 @@ def ensure_session_choice(key, options, default):
 
 
 def select_polo(polo):
+    st.session_state["selected_polo"] = polo
     st.query_params["polo"] = polo
 
 
@@ -198,27 +199,27 @@ def kpi_card(title, value, description):
     )
 
 
-def chart_layout(fig, title, height=310, showlegend=False):
+def chart_layout(fig, title, height=340, showlegend=False):
     fig.update_layout(
         template="plotly_dark",
         title=title,
         height=height,
         paper_bgcolor=CHART_BG,
         plot_bgcolor=CHART_BG,
-        font=dict(color=PAGE_TEXT, size=10),
-        title_font=dict(color="#ffffff", size=14),
-        margin=dict(l=12, r=18, t=44, b=24),
+        font=dict(color=PAGE_TEXT, size=12),
+        title_font=dict(color="#ffffff", size=17),
+        margin=dict(l=16, r=24, t=52, b=30),
         xaxis=dict(
             title="",
             gridcolor="rgba(255,255,255,0.07)",
             zeroline=False,
-            tickfont=dict(color=PAGE_TEXT, size=10),
+            tickfont=dict(color=PAGE_TEXT, size=12),
         ),
         yaxis=dict(
             title="",
             gridcolor="rgba(255,255,255,0.03)",
             automargin=True,
-            tickfont=dict(color=PAGE_TEXT, size=10),
+            tickfont=dict(color=PAGE_TEXT, size=12),
         ),
         bargap=0.28,
         showlegend=showlegend,
@@ -227,7 +228,7 @@ def chart_layout(fig, title, height=310, showlegend=False):
     return fig
 
 
-def horizontal_bar(frame, column, label, title, color, limit=10, height=310):
+def horizontal_bar(frame, column, label, title, color, limit=10, height=340):
     chart_data = (
         frame[column]
         .fillna("Não informado")
@@ -253,13 +254,15 @@ def horizontal_bar(frame, column, label, title, color, limit=10, height=310):
     fig.update_traces(
         textposition="outside",
         cliponaxis=False,
+        textfont=dict(color="#ffffff", size=13),
         hovertemplate="%{customdata[0]}<br>Quantidade: %{x}<extra></extra>",
     )
     return chart_layout(fig, title, height=height)
 
 
-query_polo = str(st.query_params.get("polo", "ATIVO")).upper()
+query_polo = str(st.query_params.get("polo", st.session_state.get("selected_polo", "ATIVO"))).upper()
 selected_polo = query_polo if query_polo in ["ATIVO", "PASSIVO"] else "ATIVO"
+st.session_state["selected_polo"] = selected_polo
 
 df_tse = df[contains(df[COL_TRIBUNAL], "TSE")].copy()
 df_base = df_tse[contains(df_tse[COL_POLO], selected_polo)].copy()
@@ -448,21 +451,21 @@ with g1:
     fig1.update_layout(
         template="plotly_dark",
         title="Distribuição por Tipo de Ação",
-        height=310,
+        height=340,
         paper_bgcolor=CHART_BG,
         plot_bgcolor=CHART_BG,
-        font=dict(color=PAGE_TEXT, size=10),
-        title_font=dict(color="#ffffff", size=14),
+        font=dict(color=PAGE_TEXT, size=12),
+        title_font=dict(color="#ffffff", size=17),
         legend=dict(
             orientation="h",
             y=-0.16,
             x=0,
-            font=dict(size=10, color=PAGE_TEXT),
+            font=dict(size=12, color=PAGE_TEXT),
         ),
-        margin=dict(l=10, r=10, t=44, b=42),
+        margin=dict(l=12, r=12, t=52, b=48),
     )
     fig1.update_traces(
-        textfont=dict(color="#ffffff", size=11),
+        textfont=dict(color="#ffffff", size=13),
         marker=dict(line=dict(color=CHART_BG, width=1)),
     )
     st.plotly_chart(fig1, width="stretch", config=PLOTLY_CONFIG)
